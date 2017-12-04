@@ -5,10 +5,10 @@
 class Section
 {
 	public:
+		Vehicle *myVehicle;
 		inline Section() { myVehicle = 0; }
 		inline Section(Vehicle* v) { myVehicle = v; }
 		inline ~Section() {}
-		Vehicle *myVehicle;
 };
 
 #endif
