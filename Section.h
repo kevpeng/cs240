@@ -5,9 +5,9 @@
 class Section
 {
 	public:
-		inline Section() { myVehicle = NULL; };
-		inline Section(Vehicle* v) { myVehicle = v; };
-		inline ~Section() {};
+		inline Section() { myVehicle = 0; }
+		inline Section(Vehicle* v) { myVehicle = v; }
+		inline ~Section() {}
 		Vehicle *myVehicle;
 };
 
