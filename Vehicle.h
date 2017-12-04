@@ -1,5 +1,6 @@
 #ifndef VEHICLE_H
 #define VEHICLE_H
+#include <vector>
 
 class Vehicle
 {
@@ -15,7 +16,7 @@ class Vehicle
 		int length;  				// length of vehicle
 		vehicleType myVehicle; 	// type of vehicle
 		movementType myMovement;	// type of movement
-		vector<int> positionInRoad; // location of road on vehicle
+		std::vector<int> positionInRoad; // location of road on vehicle
 
 
 
