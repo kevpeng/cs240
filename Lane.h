@@ -1,5 +1,6 @@
 #ifndef LANE_H
 #define LANE_H
+#include <vector>
 #include "Section.h"
 
 class Lane

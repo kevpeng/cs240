@@ -8,7 +8,7 @@ class Section
 		Vehicle *myVehicle;
 		inline Section() { myVehicle = 0; }
 		inline Section(Vehicle* v) { myVehicle = v; }
-		inline ~Section() {}
+		inline ~Section() { delete myVehicle; }
 };
 
 #endif
