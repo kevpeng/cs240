@@ -58,12 +58,3 @@ void Sim::print()
 
 
 
-Section* intersection[2][2];
-std::vector<Lane> lanes;/*  Even indexed lanes are OUTBOUND
-							--70--
-							 6XX1
-							 5XX2
-							--43--
-							 */   
-vector<Vehicle> vehicles;
-
