@@ -15,13 +15,13 @@ class Random
 	//	inline Random(string s) { Random::seed_seq(str.begin(), str.end()); 
 	//		randint01(1,3); default_random_engine generator(seed); }
 		
-		inline static int  randint() { return Random::randInt01(Random::rng); }
-    	inline static int  randint(int a, int b)
+		inline static int  randInt() { return Random::randInt01(Random::rng); }
+    	inline static int  randInt(int a, int b)
     	{
       		double u = Random::randdouble(Random::rng);
 			int mappedValue = a + (int)((b - a + 1)*u);
 			return(mappedValue);
 		}
-		inline static int getRandInt() { return randint(1,3); }
+		inline static int getRandInt() { return randInt(1,3); }
 };
 #endif

@@ -8,7 +8,7 @@ uniform_real_distribution<double> Random::randdouble(0.0,1.0);
 
 int main()
 {
-   for (int i = 0; i < 100; i++)
+   for (int i = 0; i < 5; i++)
       //std::cout << Random::randint() << std::endl;
       std::cout << Random::randint(1,3) << std::endl;
 
