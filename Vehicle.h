@@ -8,6 +8,7 @@
  *
  */
 #include "Random.h"
+#include "ProbabilityParser.h"
 #include <iostream>
 
 class Vehicle
@@ -17,12 +18,44 @@ class Vehicle
 		enum movementTypes { straight, left, right };
 		enum vehicleTypes { car, SUV, truck };
 
-		// default constructor
-		// Pick
-		inline Vehicle() { 
-			myMovement= movementTypes(Random::randInt(0,2)); 
-			myVehicle = vehicleTypes(Random::randInt(0,2));
+		inline Vehicle() { myLength = 0;}
+		// default constructor from file
+		inline Vehicle(string file) { 
+			ProbabilityParser temp = ProbabilityParser(file);
+			int maxVehicles = temp.getVehicleSum();
+			int maxTurns = temp.getMovementSum();
+			int myVehicleInt = Random::randInt(0, maxVehicles);			
+			if(myVehicleInt < temp.getCarChance()){
+				myVehicle = vehicleTypes(0);
+			}
+			else if(myVehicleInt < temp.getSUVChance() + temp.getCarChance()){
+				myVehicle = vehicleTypes(1);
+			}
+			else{
+				myVehicle = vehicleTypes(2);
+			}
 			myLength = myVehicle + 2;
+			
+			
+			int myTurnInt = Random::randInt(0, maxTurns);
+			if(myTurnInt < temp.getStraightChance()){
+				myMovement = movementTypes(0);
+			}
+			else if(myTurnInt < temp.getStraightChance() + temp.getLeftChance()){
+				myMovement = movementTypes(1);
+			}
+			else{
+				myMovement = movementTypes(2);
+			}
+			
+		/*
+			cout << "ERROR TESTING IN VEHICLE CONSTRUCTOR: " << endl << "movement = " << myMovement << endl;
+			cout << "straight chance: " << temp.getStraightChance() << endl << "left chance: " << temp.getLeftChance()+temp.getStraightChance() << endl
+				<< "right chance: " << temp.getRightChance() << endl;
+			cout << "myVehicleInt: " << myVehicleInt << endl;
+			cout << "vehicle = " << myVehicle << endl << "+++++++++++++++++++++++" << endl;
+		*/	
+
 		}
 		
 		inline void print() {
