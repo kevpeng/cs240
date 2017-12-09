@@ -9,25 +9,25 @@ class Section
 		inline Section() { myVehicle = 0; }
 		inline Section(Vehicle* v) { myVehicle = v; }
 		inline ~Section() { delete myVehicle; }
-		inline String toString()
+		inline char toString()
 		{
 			if(myVehicle == 0)
-				return ' ';
+				return 'n';
 			else
 			{
-				switch(myVehicle.myVehicle)
+				switch(myVehicle->type())
 				{
-					case car:
+					case Vehicle::car:
 						return 'C';
 						break;
-					case SUV:
+					case Vehicle::SUV:
 						return 'S';
 						break;
-					case truck:
+					case Vehicle::truck:
 						return 'T';
 						break;
 					default:
-						return ' ';
+						return 'd';
 						break;
 				}
 			}

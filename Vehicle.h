@@ -2,7 +2,7 @@
 #define VEHICLE_H
 
 /*
- * This veehicle file provdes the methods and variables of our vehicle class.
+ * This vehicle file provdes the methods and variables of our vehicle class.
  * The default constructor will initialize a vehicle based on a random integer, 
  * and it's proposed type of movement will be initialized the same way. 
  *
@@ -62,6 +62,8 @@ class Vehicle
 			cout << "myVehicle = " << myVehicle << endl;
 			cout << "myLength = " << myLength << endl;
 			cout << "myMovement = " << myMovement << endl << endl;}
+
+		inline vehicleTypes type() { return myVehicle; }	// accessor method for vehicleType
 
 	private:				
 		int myLength;  				// length of vehicle
