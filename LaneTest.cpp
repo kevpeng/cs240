@@ -2,7 +2,7 @@
 
 void printThisLane(Lane &myLane)
 {
-	for (int i = OVERHANG; i < myLane.length + OVERHANG; ++i)
+	for (int i = 0; i < myLane.length + OVERHANG; ++i)
 	{
 		cout << myLane[i] << " index: " << i << "\tvisible Pos: " << i - OVERHANG << endl;
 	}
@@ -25,12 +25,17 @@ bool isSpaceAvailable(Vehicle v, Lane &myLane)
 			return false;
 		}
 	}
+
+	return result;
 }
 
 void conditionallyAddVehicle(Lane &myLane)
 {
 	// construct a vehicle
-	Vehicle *temp = new Vehicle("input.txt");
+	Vehicle *temp = new Vehicle((Vehicle::vehicleTypes)(Random::getRandInt()), Vehicle::straight); //new Vehicle("input.txt");
+
+	// doesn't work, gives undef reference
+	//Vehicle *temp = new Vehicle("input.txt");
 
 	// check if it can fit in the lane
 	if(isSpaceAvailable(*temp, myLane))
@@ -38,7 +43,7 @@ void conditionallyAddVehicle(Lane &myLane)
 		// we can! put it in
 		for (int i = 0; i < temp->length(); ++i)
 		{
-			myLane[i]->assign(temp);
+			myLane[i]->assign(temp);	
 		}
 	}
 	else
@@ -55,6 +60,18 @@ int main(int argc, char const *argv[])
 	while(true)
 	{
 		printThisLane(myLane);
+
+		// todo: do something about deleting vehicle at the end...
+		// attempt: if popping and it eave an empty space, that means the vehicle is off this board
+		Vehicle *temp = myLane.pop()->myVehicle;
+
+		// conditionally delete this vehicle if we have an empty space at the end
+		if(myLane.back() == 0)
+			delete temp;
+
+		myLane.push(new Section);
+
+		conditionallyAddVehicle(myLane);
 
 		cin.get();
 	}

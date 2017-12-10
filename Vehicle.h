@@ -18,8 +18,16 @@ class Vehicle
 		enum movementTypes { straight, left, right };
 		enum vehicleTypes { car, SUV, truck };
 
+		// Default constructor
 		inline Vehicle() { myLength = 0;}
-		// default constructor from file
+		// Type constructor (for testing)
+		inline Vehicle(vehicleTypes type, movementTypes movement)
+		{
+			myLength = type + 2;
+			myVehicle = type;
+			myMovement = movement;
+		}
+		// File constructor
 		inline Vehicle(string file) { 
 			ProbabilityParser temp = ProbabilityParser(file);
 			int maxVehicles = temp.getVehicleSum();

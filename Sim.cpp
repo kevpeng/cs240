@@ -47,7 +47,9 @@ void Sim::print()
 		// (one pointing up and another down) we will
 		// need to count back for one
 
-		cout << (lanes[7][4 + i])->toString() << (lanes[0][len - i - 1])->toString();
+		// N_IN and N_OUT are macros for 7 and 0 respectively (in Lane.h)
+
+		cout << (lanes[N_IN][4 + i])->toString() << (lanes[N_OUT][len - i - 1])->toString();
 
 		//same, but for this one the adjacent inbound lane is EW, so EW light
 		for(int j = 0; j < len; ++j)

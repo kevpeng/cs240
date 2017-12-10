@@ -12,7 +12,7 @@ class Section
 		inline char toString() const
 		{
 			if(myVehicle == 0)
-				return '-';
+				return ' ';
 			else
 			{
 				switch(myVehicle->type())

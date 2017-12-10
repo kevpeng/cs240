@@ -33,6 +33,10 @@ class Lane
 		int length;
 
 		
+		inline Section*	back()
+		{
+			return roadSections.back();
+		}
 		inline Section*	pop()
 		{
 			Section* temp = roadSections.back();
