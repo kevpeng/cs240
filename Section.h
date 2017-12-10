@@ -9,10 +9,10 @@ class Section
 		inline Section() { myVehicle = 0; }
 		inline Section(Vehicle* v) { myVehicle = v; }
 		inline ~Section() { delete myVehicle; }
-		inline char toString()
+		inline char toString() const
 		{
 			if(myVehicle == 0)
-				return 'n';
+				return '-';
 			else
 			{
 				switch(myVehicle->type())
@@ -32,14 +32,18 @@ class Section
 				}
 			}
 		}
-
-		//overloading the << operator
-		/*
-		std::ostream& operator<<(std::ostream &strm, const Section &a) 
-		{
-		  return strm << ;
-		}
-		*/
+		inline void assign(Vehicle* v) { myVehicle = v; }
 };
+/*
+inline std::ostream& operator<<(std::ostream &out, const Section &a) 
+{
+	return out << a.toString();
+}
+*/
+
+inline std::ostream& operator<<(std::ostream &out, const Section *a) 
+{
+	return out << a->toString();
+}
 
 #endif

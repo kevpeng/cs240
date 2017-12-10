@@ -63,7 +63,9 @@ class Vehicle
 			cout << "myLength = " << myLength << endl;
 			cout << "myMovement = " << myMovement << endl << endl;}
 
-		inline vehicleTypes type() { return myVehicle; }	// accessor method for vehicleType
+		inline vehicleTypes type()   { return myVehicle; }	// accessor method for vehicleType
+		inline int			length() { return myLength;  }	// accessor method for length
+
 
 	private:				
 		int myLength;  				// length of vehicle
