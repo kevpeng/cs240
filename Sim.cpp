@@ -1,6 +1,18 @@
 #include "Sim.h"
 #include <iostream>
 
+#ifndef N_OUT_LANE
+
+#define N_OUT_LANE lanes[0]
+#define E_IN_LANE  lanes[1]
+#define E_OUT_LANE lanes[2]
+#define S_IN_LANE  lanes[3]
+#define S_OUT_LANE lanes[4]
+#define W_IN_LANE  lanes[5]
+#define W_OUT_LANE lanes[6]
+#define N_IN_LANE  lanes[7]
+
+#endif
 
 //Sim::Sim()
 //{
@@ -8,15 +20,25 @@
 
 Sim::Sim(int len, int rTime, int yTime, int gTime)
 {
-	this.len = len;
+	this->len = len;
 
 	NS_light.setTime(rTime, yTime, gTime);
 	EW_light.setTime(rTime, yTime, gTime);
 
-	NS_light.setColor(Color.Red);
-	EW_light.setColor(Color.Green);
+	NS_light.setColor(Stoplight::Red);
+	EW_light.setColor(Stoplight::Green);
 }
-Sim::~Sim();
+Sim::~Sim()
+{
+
+}
+
+void Sim::update()
+{
+
+}
+
+
 /*
  * This function prints the "board"
  *
@@ -31,7 +53,7 @@ void Sim::print()
 	//       
 	//0L  L0
 	//00  00
-
+/*
 	// print each line, containing len blanks,
 	// a road section of an outbound and inbound
 	// lane, then len blanks
@@ -49,12 +71,27 @@ void Sim::print()
 
 		// N_IN and N_OUT are macros for 7 and 0 respectively (in Lane.h)
 
-		cout << (lanes[N_IN][4 + i])->toString() << (lanes[N_OUT][len - i - 1])->toString();
+		cout << (N_IN_LANE[OVERHANG + i]) << (N_OUT_LANE[len - i - 1]);
 
 		//same, but for this one the adjacent inbound lane is EW, so EW light
 		for(int j = 0; j < len; ++j)
 			cout << (i == 0 && j == i) ? 'L' : ' ';
 	}
+	*/
+
+	// lets print the two east lanes
+
+	for (int i = 0; i < len; ++i)
+	{
+		cout << "Here, my len is: " << len + OVERHANG - i - 1 << endl;
+		cout << E_IN_LANE[len + OVERHANG - i - 1];
+	}
+	cout << endl;
+	for (int i = 0; i < len; ++i)
+	{
+		cout << E_OUT_LANE[i];
+	}
+	cout << endl;
 
 }
 

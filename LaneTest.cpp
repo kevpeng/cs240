@@ -32,8 +32,8 @@ bool isSpaceAvailable(Vehicle v, Lane &myLane)
 void conditionallyAddVehicle(Lane &myLane)
 {
 	// construct a vehicle
-	Vehicle *temp = new Vehicle((Vehicle::vehicleTypes)(Random::getRandInt()), Vehicle::straight); //new Vehicle("input.txt");
-
+	Vehicle *temp = new Vehicle((Vehicle::vehicleTypes)(2), Vehicle::straight); //new Vehicle("input.txt");
+													//Random::getRandInt()
 	// doesn't work, gives undef reference
 	//Vehicle *temp = new Vehicle("input.txt");
 

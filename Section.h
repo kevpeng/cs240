@@ -1,6 +1,7 @@
 #ifndef __section_h
 #define __section_h
 #include "Vehicle.h"
+#define SQUARE_CHAR (char)219u
 
 class Section
 {
@@ -18,13 +19,13 @@ class Section
 				switch(myVehicle->type())
 				{
 					case Vehicle::car:
-						return 'C';
+						return SQUARE_CHAR; //'C';
 						break;
 					case Vehicle::SUV:
-						return 'S';
+						return SQUARE_CHAR; //'S';
 						break;
 					case Vehicle::truck:
-						return 'T';
+						return SQUARE_CHAR; //'T';
 						break;
 					default:
 						return 'd';
