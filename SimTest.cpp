@@ -7,7 +7,7 @@ uniform_real_distribution<double> Random::randdouble(0.0,1.0);
 int main(int argc, char const *argv[])
 {
 	int count = 0;
-	Sim John(10, 5, 2, 5);
+	Sim John(10, 7, 2, 5);
 
 	John.W_IN_LANE.conditionallyAddVehicle("input.txt");
 	John.E_IN_LANE.conditionallyAddVehicle("input.txt");
@@ -18,6 +18,13 @@ int main(int argc, char const *argv[])
 	{
 		//printThisLane(myLane);
 		cout << endl << endl << count << endl;
+
+		cout << "NS: " << endl;
+		John.NS_light.print();
+
+		cout << "EW: " << endl;
+		John.EW_light.print();
+
 		John.print();
 
 		// todo: do something about deleting vehicle at the end...
@@ -49,6 +56,7 @@ int main(int argc, char const *argv[])
 		//myLane.conditionallyAddVehicle("input.txt");
 
 		count++;
+		John.update();
 		cin.get();
 	}
 

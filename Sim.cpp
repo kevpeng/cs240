@@ -50,7 +50,8 @@ Sim::~Sim()
 
 void Sim::update()
 {
-
+	NS_light.update();
+	EW_light.update();
 }
 
 
