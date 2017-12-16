@@ -1,6 +1,8 @@
 #ifndef __STOPLIGHT_H__
 #define __STOPLIGHT_H__
 
+#include "LightParser.h"
+
 class Stoplight
 {
 public:

@@ -5,15 +5,18 @@ using namespace std;
 
 Stoplight::Stoplight()
 {
+	// parses the file
+	LightParser temp = LightParser("lights.txt");
 	myColor = Red;
-	redCountDown = 16; 
-	yellowCountDown = 5; 
-	greenCountDown = 10;
+	redCountDown = temp.getRedTime(); 
+	yellowCountDown = temp.getYellowTime(); 
+	greenCountDown = temp.getGreenTime();
 	count = redCountDown;
 
 }
 
 Stoplight::~Stoplight() {}
+
 
 void Stoplight::setTime(int r, int y, int g)
 {
@@ -21,6 +24,7 @@ void Stoplight::setTime(int r, int y, int g)
 	yellowCountDown = y;
 	greenCountDown = g;
 }
+
 
 void Stoplight::setColor(Color c)
 {
