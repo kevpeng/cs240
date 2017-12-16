@@ -1,7 +1,7 @@
 #include "Sim.h"
 #include <iostream>
-
-#define UPPERLINE (char)238u
+//#include <stdio.h>
+//#define UPPERLINE (char)238u
 #ifndef N_OUT_LANE
 
 #define N_OUT_LANE lanes[0]
@@ -93,42 +93,54 @@ void Sim::print()
 
 	for(int i = 0; i < len; i++) // len = 10
 	{
-		if(i != len-1)
+	/*	if(i != len-1)
 		{
-			for(int j = 0; j < len - 1; j++) { cout << "-"; }
-			cout << '|' << S_IN_LANE[i+OVERHANG] << N_OUT_LANE[len-i-1] << '|';	
-			for(int j = 0; j < len - 1; j++) { cout << "-"; }
- 			cout << endl;
-		} else {
-			for(int j = 0; j < len - 1; j++) { cout << "_"; }
-			cout << '|' << S_IN_LANE[i+OVERHANG] << N_OUT_LANE[len-i-1] << '|';	
-			for(int j = 0; j < len - 1; j++) { cout << "_"; }
+	*/
+		for(int j = 0; j < len; j++) { cout << "-"; }
+		cout << '*' << S_IN_LANE[i+OVERHANG] << N_OUT_LANE[len-i-1] << '*';	
+		for(int j = 0; j < len; j++) { cout << "-"; }
+ 		cout << endl;
+	/*	} else {
+			for(int j = 0; j < len; j++) { cout << "*"; }
+			cout << '*' << S_IN_LANE[i+OVERHANG] << N_OUT_LANE[len-i-1] << '*';	
+			for(int j = 0; j < len; j++) { cout << "*"; }
  			cout << endl;
 		}
+	*/
+
 	}
 	
+	for(int i = 0; i < len * 2 + 4; i++) { cout << "*"; }
+	cout << endl;
 	for(int i = 0; i < len; i++){ cout << W_OUT_LANE[len-i-1]; }
-	cout << intersection[0][0] << intersection[0][1];
+	cout << '*' << intersection[0][0] << intersection[0][1] << '*';
 	for(int i = 0; i < len; i++){ cout << W_IN_LANE[i+OVERHANG]; }
 	cout << endl; 
 	for(int i = 0; i < len; i++){ cout << E_IN_LANE[i+OVERHANG]; }
-	cout << intersection[1][0] << intersection[1][1];
+	cout << '*' << intersection[1][0] << intersection[1][1] << '*';
 	for(int i = 0; i < len; i++){ cout << W_IN_LANE[len-i-1]; }
+	cout << endl;
+	for(int i = 0; i < len * 2 + 4; i++) { cout << "*"; }
 	cout << endl;
 
 	for(int i = 0; i < len; i++) // len = 10
 	{	
-		if(i != 0){
+	/*	if(i == 0)
+		{	
+	*/
+		for(int j = 0; j < len; j++) { cout << "-"; }
+		cout << '*' << S_OUT_LANE[i] << N_IN_LANE[len+OVERHANG-1-i] << '*';	
+		for(int j = 0; j < len; j++) { cout << "-"; }
+ 		cout << endl;
+		
+	/*
+			} else {
 			for(int j = 0; j < len; j++) { cout << "-"; }
-			cout << S_OUT_LANE[i] << N_IN_LANE[len+OVERHANG-1-i];	
+			cout << '*' << S_OUT_LANE[i] << N_IN_LANE[len+OVERHANG-1-i] << '*';	
 			for(int j = 0; j < len; j++) { cout << "-"; }
- 			cout << endl;
-		} else {
-			for(int j = 0; j < len; j++) { cout << UPPERLINE; }
-			cout << S_OUT_LANE[i] << N_IN_LANE[len+OVERHANG-1-i];	
-			for(int j = 0; j < len; j++) { cout << UPPERLINE; }
- 			cout << endl;
-		}	
+ 			cout << endl;	
+		}
+	*/
 	}
 
 /*
