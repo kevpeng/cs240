@@ -6,29 +6,83 @@ using namespace std;
 Stoplight::Stoplight()
 {
 	myColor = Red;
-	redCountDown = 20; 
+	redCountDown = 16; 
 	yellowCountDown = 5; 
-	greenCountDown = 20;
+	greenCountDown = 10;
+	count = redCountDown;
+
 }
 
 Stoplight::~Stoplight() {}
 
-void Stoplight::setTime(int r, int g, int y)
+void Stoplight::setTime(int r, int y, int g)
 {
 	redCountDown = r;
-	yellowCountDown = g;
-	greenCountDown = y;
+	yellowCountDown = y;
+	greenCountDown = g;
 }
 
 void Stoplight::setColor(Color c)
 {
 	myColor = c;
+
+	switch(myColor)
+	{
+		case Red:
+			count = redCountDown;
+			break;
+		case Green:
+			count = greenCountDown;
+			break;
+		case Yellow:
+			count = yellowCountDown;
+			break;
+	}
+}
+
+void Stoplight::update()
+{
+	if (count > 1)
+	{
+		count--;
+	}
+	else
+	{
+		switch(myColor)
+		{
+			case Red:
+				setColor(Green);
+				break;
+			case Green:
+				setColor(Yellow);
+				break;
+			case Yellow:
+				setColor(Red);
+				break;
+		}
+	}
 }
 
 void Stoplight::print()
 {
-	cout << " red: " << redCountDown << endl;
+/*	cout << " red: " << redCountDown << endl;
 	cout << " green: " << greenCountDown << endl;
-	cout << " yellow: " << yellowCountDown << endl;
-	cout << " color: " << myColor << endl;
+	cout << " yellow: " << yellowCountDown << endl;*/
+	cout << " count: " << count << endl;
+	cout << " color: ";// << myColor << endl;
+
+	switch(myColor)
+	{
+		case Red:
+			cout << "Red";
+			break;
+		case Green:
+			cout << "Green";
+			break;
+		case Yellow:
+			cout << "Yellow";
+			break;
+	}
+
+	cout << endl;
 }

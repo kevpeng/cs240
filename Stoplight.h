@@ -8,17 +8,16 @@ public:
 
 	Stoplight();
 	~Stoplight();
-	void setTime(int r, int g, int y);
+	void setTime(int r, int y, int g);
 	void setColor(Color c);
 	void print();
+	void update();
 
 private:
 	Color myColor;
 	int redCountDown;
 	int yellowCountDown;
 	int greenCountDown;
-
-
-
+	int count;
 };
 #endif
