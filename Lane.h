@@ -15,6 +15,8 @@
 #include <vector>
 #include "Section.h"
 
+
+
 class Lane
 {
 	public:
@@ -55,6 +57,12 @@ class Lane
 		{
         	return roadSections[i];
     	}
+    	void conditionallyAddVehicle(string file);
+    	bool isSpaceAvailable(Vehicle v);
+
+    protected:
+    	
+
 };
 
 #endif
