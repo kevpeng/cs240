@@ -13,19 +13,19 @@ class Section
 		inline char toString() const
 		{
 			if(myVehicle == 0)
-				return ' ';
+				return '_';
 			else
 			{
 				switch(myVehicle->type())
 				{
 					case Vehicle::car:
-						return SQUARE_CHAR; //'C';
+						return 'C'; //'C';
 						break;
 					case Vehicle::SUV:
-						return SQUARE_CHAR; //'S';
+						return 'S'; //'S';
 						break;
 					case Vehicle::truck:
-						return SQUARE_CHAR; //'T';
+						return 'T'; //'T';
 						break;
 					default:
 						return 'd';
