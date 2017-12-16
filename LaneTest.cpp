@@ -1,5 +1,9 @@
 #include "Lane.h"
 
+  	mt19937 Random::rng(8675309);
+	uniform_int_distribution<int> Random::randInt01(15,18);
+  	uniform_real_distribution<double> Random::randdouble(0.0,1.0);
+
 void printThisLane(Lane &myLane)
 {
 	for (int i = 0; i < myLane.length + OVERHANG; ++i)
@@ -32,10 +36,10 @@ bool isSpaceAvailable(Vehicle v, Lane &myLane)
 void conditionallyAddVehicle(Lane &myLane)
 {
 	// construct a vehicle
-	Vehicle *temp = new Vehicle((Vehicle::vehicleTypes)(2), Vehicle::straight); //new Vehicle("input.txt");
+	//Vehicle *temp = new Vehicle((Vehicle::vehicleTypes)(2), Vehicle::straight); //new Vehicle("input.txt");
 													//Random::getRandInt()
 	// doesn't work, gives undef reference
-	//Vehicle *temp = new Vehicle("input.txt");
+	Vehicle *temp = new Vehicle("input.txt");
 
 	// check if it can fit in the lane
 	if(isSpaceAvailable(*temp, myLane))
