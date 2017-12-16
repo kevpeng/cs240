@@ -1,5 +1,6 @@
 #include "Lane.h"
 
+	// static members of random.
   	mt19937 Random::rng(8675309);
 	uniform_int_distribution<int> Random::randInt01(15,18);
   	uniform_real_distribution<double> Random::randdouble(0.0,1.0);
@@ -12,7 +13,7 @@ void printThisLane(Lane &myLane)
 	}
 	cout << endl;
 }
-
+/*
 bool isSpaceAvailable(Vehicle v, Lane &myLane)
 {
 	bool result = true;
@@ -22,7 +23,7 @@ bool isSpaceAvailable(Vehicle v, Lane &myLane)
 	{
 		try
 		{
-			result &= (myLane[i]->toString() == ' ');
+			result &= !(myLane[i]->hasVehicle());
 		}
 		catch(...)
 		{
@@ -36,8 +37,6 @@ bool isSpaceAvailable(Vehicle v, Lane &myLane)
 void conditionallyAddVehicle(Lane &myLane)
 {
 	// construct a vehicle
-	//Vehicle *temp = new Vehicle((Vehicle::vehicleTypes)(2), Vehicle::straight); //new Vehicle("input.txt");
-													//Random::getRandInt()
 	// doesn't work, gives undef reference
 	Vehicle *temp = new Vehicle("input.txt");
 
@@ -56,7 +55,7 @@ void conditionallyAddVehicle(Lane &myLane)
 		delete temp;
 	}
 }
-
+*/
 int main(int argc, char const *argv[])
 {
 	Lane myLane(10);
@@ -70,12 +69,13 @@ int main(int argc, char const *argv[])
 		Vehicle *temp = myLane.pop()->myVehicle;
 
 		// conditionally delete this vehicle if we have an empty space at the end
+		// pop space > delete veh popped if empty >> push empty spot to end
 		if(myLane.back() == 0)
 			delete temp;
 
 		myLane.push(new Section);
 
-		conditionallyAddVehicle(myLane);
+		myLane.conditionallyAddVehicle("input.txt");
 
 		cin.get();
 	}
