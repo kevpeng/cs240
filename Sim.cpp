@@ -1,16 +1,17 @@
 #include "Sim.h"
 #include <iostream>
 
+#define UPPERLINE (char)238u
 #ifndef N_OUT_LANE
 
 #define N_OUT_LANE lanes[0]
-#define E_IN_LANE  lanes[1]
+#define W_IN_LANE  lanes[1]
 #define E_OUT_LANE lanes[2]
-#define S_IN_LANE  lanes[3]
+#define N_IN_LANE  lanes[3]
 #define S_OUT_LANE lanes[4]
-#define W_IN_LANE  lanes[5]
+#define E_IN_LANE  lanes[5]
 #define W_OUT_LANE lanes[6]
-#define N_IN_LANE  lanes[7]
+#define S_IN_LANE  lanes[7]
 
 #endif
 
@@ -18,9 +19,18 @@
 //{
 //}
 
+
+
 Sim::Sim(int len, int rTime, int yTime, int gTime)
 {
 	this->len = len;
+	intersection[0][0] = new Section;
+	intersection[0][1] = new Section;
+	intersection[1][0] = new Section;
+	intersection[1][1] = new Section;
+
+
+
 
 	for (int i = 0; i < 8; ++i)
 	{
@@ -52,13 +62,77 @@ void Sim::update()
  */
 void Sim::print()
 {
-	//00  00
-	//0L  L0
-	//       
-	//       
-	//0L  L0
-	//00  00
+
 /*
+	Visually:
+	---------|XX|---------
+	---------|XX|---------
+	---------|XX|---------
+	---------|XX|---------
+	---------|XX|---------
+	---------|XX|---------
+	---------|XX|---------
+	---------|XX|---------
+	---------|XX|---------
+	_________|XX|_________
+	XXXXXXXXXXIIXXXXXXXXXX
+	XXXXXXXXXXIIXXXXXXXXXX
+	---------|XX|---------
+	---------|XX|---------
+	---------|XX|---------
+	---------|XX|---------
+	---------|XX|---------
+	---------|XX|---------
+	---------|XX|---------
+	---------|XX|---------
+	---------|XX|---------
+	---------|XX|---------
+	
+*/	
+		
+
+	for(int i = 0; i < len; i++) // len = 10
+	{
+		if(i != len-1)
+		{
+			for(int j = 0; j < len - 1; j++) { cout << "-"; }
+			cout << '|' << S_IN_LANE[i+OVERHANG] << N_OUT_LANE[len-i-1] << '|';	
+			for(int j = 0; j < len - 1; j++) { cout << "-"; }
+ 			cout << endl;
+		} else {
+			for(int j = 0; j < len - 1; j++) { cout << "_"; }
+			cout << '|' << S_IN_LANE[i+OVERHANG] << N_OUT_LANE[len-i-1] << '|';	
+			for(int j = 0; j < len - 1; j++) { cout << "_"; }
+ 			cout << endl;
+		}
+	}
+	
+	for(int i = 0; i < len; i++){ cout << W_OUT_LANE[len-i-1]; }
+	cout << intersection[0][0] << intersection[0][1];
+	for(int i = 0; i < len; i++){ cout << W_IN_LANE[i+OVERHANG]; }
+	cout << endl; 
+	for(int i = 0; i < len; i++){ cout << E_IN_LANE[i+OVERHANG]; }
+	cout << intersection[1][0] << intersection[1][1];
+	for(int i = 0; i < len; i++){ cout << W_IN_LANE[len-i-1]; }
+	cout << endl;
+
+	for(int i = 0; i < len; i++) // len = 10
+	{	
+		if(i != 0){
+			for(int j = 0; j < len; j++) { cout << "-"; }
+			cout << S_OUT_LANE[i] << N_IN_LANE[len+OVERHANG-1-i];	
+			for(int j = 0; j < len; j++) { cout << "-"; }
+ 			cout << endl;
+		} else {
+			for(int j = 0; j < len; j++) { cout << UPPERLINE; }
+			cout << S_OUT_LANE[i] << N_IN_LANE[len+OVERHANG-1-i];	
+			for(int j = 0; j < len; j++) { cout << UPPERLINE; }
+ 			cout << endl;
+		}	
+	}
+
+/*
+		
 	// print each line, containing len blanks,
 	// a road section of an outbound and inbound
 	// lane, then len blanks
@@ -84,12 +158,17 @@ void Sim::print()
 	}
 	*/
 
+
+
+/*
+
+
 	// lets print the two east lanes
 
-	for (int i = 0; i < len; ++i)
+	for (int i = OVERHANG; i < len; ++i)
 	{
 		//cout << "Here, my len is: " << len + OVERHANG - i - 1 << endl;
-		cout << E_IN_LANE[len + OVERHANG - i - 1];
+		cout << E_IN_LANE[E_IN_LANE.length() - i - 1];
 		//cout << E_IN_LANE[i];
 	}
 	cout << endl;
@@ -98,7 +177,7 @@ void Sim::print()
 		cout << E_OUT_LANE[i];
 	}
 	cout << endl;
-
+*/
 }
 
 
