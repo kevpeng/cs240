@@ -22,6 +22,11 @@ Sim::Sim(int len, int rTime, int yTime, int gTime)
 {
 	this->len = len;
 
+	for (int i = 0; i < 8; ++i)
+	{
+		lanes[i] = Lane(len);
+	}
+
 	NS_light.setTime(rTime, yTime, gTime);
 	EW_light.setTime(rTime, yTime, gTime);
 
@@ -83,8 +88,9 @@ void Sim::print()
 
 	for (int i = 0; i < len; ++i)
 	{
-		cout << "Here, my len is: " << len + OVERHANG - i - 1 << endl;
+		//cout << "Here, my len is: " << len + OVERHANG - i - 1 << endl;
 		cout << E_IN_LANE[len + OVERHANG - i - 1];
+		//cout << E_IN_LANE[i];
 	}
 	cout << endl;
 	for (int i = 0; i < len; ++i)
