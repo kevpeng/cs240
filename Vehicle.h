@@ -55,7 +55,7 @@ class Vehicle
 			else{
 				myMovement = movementTypes(2);
 			}
-			
+		
 		/*
 			cout << "ERROR TESTING IN VEHICLE CONSTRUCTOR: " << endl << "movement = " << myMovement << endl;
 			cout << "straight chance: " << temp.getStraightChance() << endl << "left chance: " << temp.getLeftChance()+temp.getStraightChance() << endl
@@ -71,7 +71,8 @@ class Vehicle
 			cout << "myLength = " << myLength << endl;
 			cout << "myMovement = " << myMovement << endl << endl;}
 
-		inline vehicleTypes type()   { return myVehicle; }	// accessor method for vehicleType
+		inline vehicleTypes vehicleType()   { return myVehicle; }	// accessor method for vehicleType
+		inline movementTypes movementType()   { return myMovement; }	// accessor method for vehicleType
 		inline int			length() { return myLength;  }	// accessor method for length
 
 

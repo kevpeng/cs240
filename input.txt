@@ -1,6 +1,6 @@
 car=9
-SUV=0
-truck=0
+SUV=5
+truck=5
 
 left=0
 right=12

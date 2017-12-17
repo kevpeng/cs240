@@ -48,7 +48,6 @@ Sim::Sim(int len, string file)
 	{
 		lanes[i] = Lane(len);
 	}
-	
 	LightParser temp = LightParser(file);
 
 	// initialize lights properly
@@ -98,22 +97,32 @@ void Sim::update()
 	NS_light.update();
 	EW_light.update();
 
-	cout << "IS W_IN_LANE.back empty??" << W_IN_LANE.back()->isEmpty() << endl;	
+	cout << "Is n_out.back empty? " << N_OUT_LANE.back()->isEmpty() << endl;
+	 	
+	cout << "IS W_IN_LANE.back empty?? 0 false, 1 true: " << W_IN_LANE.back()->isEmpty() << endl;	
 	// attempt: if popping and it eave an empty space, that means the vehicle is off this board
 	// these if statements check if a lane can collectively move up one space. 
 	if(W_IN_LANE.back()->isEmpty())
 	{
+		cout << "***IN W_IN_LANE.back is empty***" << endl;
+//		cout << "IS W_IN_LANE.back empty?? 0 false, 1 true: " << W_IN_LANE.back()->isEmpty() << endl;	
         Vehicle *tempw = W_IN_LANE.pop()->myVehicle;
-        W_IN_LANE.push(new Section);
+    	W_IN_LANE.push(new Section);
 	} 
 	else 
 	{
-		cout << EW_light.getColor() << endl;
+		cout << "EW COLOR: " << EW_light.getColor() << endl;
 		if(EW_light.getColor() == Stoplight::Green) 
-		{
-			cout << W_IN_LANE.back()->myVehicle->movementType() << endl;
+		{	
+	
+			cout << W_IN_LANE.back()->myVehicle->movementType() << ": MOVEMENT TYPE!!!" << endl;
 			if(W_IN_LANE.back()->myVehicle->movementType() == Vehicle::right)
 			{
+				this->turnRight(W_IN_INDEX);
+				this->turnRight(W_IN_INDEX);
+				this->turnRight(W_IN_INDEX);
+				this->turnRight(W_IN_INDEX);
+				this->turnRight(W_IN_INDEX);
 				this->turnRight(W_IN_INDEX);
 				this->turnRight(W_IN_INDEX);
 				this->turnRight(W_IN_INDEX);
@@ -163,7 +172,11 @@ void Sim::update()
 	{
 	}
     //myLane.conditionallyAddVehicle("input.txt");			
-		
+	cout << "What's in the intersection?" << endl;
+	cout << "[0][0] = NW = " << intersection[0][0] << endl;	
+	cout << "[0][1] = NE = " << intersection[0][1] << endl;	
+	cout << "[1][0] = SW = " << intersection[1][0] << endl;	
+	cout << "[1][1] = SE = " << intersection[1][1] << endl;	
 	
 	
 
@@ -201,6 +214,10 @@ void Sim::turnRight(int laneNum)
 		lanes[laneNum].push(new Section);
 	}
 }
+
+//void Sim::goStraight(int laneNum)
+//{
+//}
 
 /*
  * This function prints the "board"
