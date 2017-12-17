@@ -10,7 +10,7 @@ class Section
 		inline Section() { myVehicle = 0; }
 		inline Section(Vehicle* v) { myVehicle = v; }
 		inline ~Section() { delete myVehicle; }
-		inline bool hasVehicle() { return myVehicle != 0; }
+		inline bool isEmpty() { return myVehicle == 0; }
 		inline char toString() const
 		{
 			if(myVehicle == 0)

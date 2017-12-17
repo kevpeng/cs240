@@ -30,7 +30,7 @@ bool Lane::isSpaceAvailable(Vehicle v)
 	{
 		try
 		{
-			result &= !((*this)[i]->hasVehicle());
+			result &= (*this)[i]->isEmpty();
 		}
 		catch(...)
 		{
