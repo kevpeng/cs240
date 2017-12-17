@@ -53,6 +53,33 @@ void Sim::update()
 {
 	NS_light.update();
 	EW_light.update();
+	
+	// attempt: if popping and it eave an empty space, that means the vehicle is off this board
+
+	if(John.W_IN_LANE[len+OVERHANG-1].isEmpty())
+	{
+        Vehicle *tempw = John.W_IN_LANE.pop()->myVehicle;
+        John.W_IN_LANE.push(new Section);
+	}
+	if(John.E_IN_LANE[len+OVERHANG-1].isEmpty())
+	{
+        Vehicle *tempe = John.E_IN_LANE.pop()->myVehicle;
+        John.E_IN_LANE.push(new Section);
+	}
+	if(John.N_IN_LANE[len+OVERHANG-1].isEmpty())
+	{
+        Vehicle *tempn = John.N_IN_LANE.pop()->myVehicle;
+        John.N_IN_LANE.push(new Section);
+	}
+	if(John.S_IN_LANE[len+OVERHANG-1].isEmpty())
+	{
+        Vehicle *temps = John.S_IN_LANE.pop()->myVehicle;
+        John.S_IN_LANE.push(new Section);
+	}
+        //myLane.conditionallyAddVehicle("input.txt");			
+		
+	
+
 }
 
 

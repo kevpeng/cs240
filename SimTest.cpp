@@ -26,7 +26,7 @@ int main(int argc, char const *argv[])
 		John.EW_light.print();
 
 		John.print();
-
+/*
 		// attempt: if popping and it eave an empty space, that means the vehicle is off this board
 		Vehicle *tempw = John.W_IN_LANE.pop()->myVehicle;
 		Vehicle *tempe = John.E_IN_LANE.pop()->myVehicle;
@@ -53,7 +53,7 @@ int main(int argc, char const *argv[])
 		John.N_IN_LANE.push(new Section);
 
 		//myLane.conditionallyAddVehicle("input.txt");
-
+*/
 		count++;
 		John.update();
 		cin.get();
