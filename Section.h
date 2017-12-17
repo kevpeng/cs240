@@ -36,12 +36,6 @@ class Section
 		}
 		inline void assign(Vehicle* v) { myVehicle = v; }
 };
-/*
-inline std::ostream& operator<<(std::ostream &out, const Section &a) 
-{
-	return out << a.toString();
-}
-*/
 
 inline std::ostream& operator<<(std::ostream &out, const Section *a) 
 {

@@ -13,49 +13,7 @@ void printThisLane(Lane &myLane)
 	}
 	cout << endl;
 }
-/*
-bool isSpaceAvailable(Vehicle v, Lane &myLane)
-{
-	bool result = true;
 
-	// check to see if we can fit the length of the vehicle with an extra space
-	for (int i = 0; i < v.length() + 1; ++i)
-	{
-		try
-		{
-			result &= !(myLane[i]->hasVehicle());
-		}
-		catch(...)
-		{
-			return false;
-		}
-	}
-
-	return result;
-}
-
-void conditionallyAddVehicle(Lane &myLane)
-{
-	// construct a vehicle
-	// doesn't work, gives undef reference
-	Vehicle *temp = new Vehicle("input.txt");
-
-	// check if it can fit in the lane
-	if(isSpaceAvailable(*temp, myLane))
-	{
-		// we can! put it in
-		for (int i = 0; i < temp->length(); ++i)
-		{
-			myLane[i]->assign(temp);	
-		}
-	}
-	else
-	{
-		// we can't, that means we don't need the vehicle we constructed anymore
-		delete temp;
-	}
-}
-*/
 int main(int argc, char const *argv[])
 {
 	Lane myLane(10);

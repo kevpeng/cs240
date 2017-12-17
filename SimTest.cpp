@@ -7,7 +7,7 @@ uniform_real_distribution<double> Random::randdouble(0.0,1.0);
 int main(int argc, char const *argv[])
 {
 	int count = 0;
-	Sim John(10, 7, 2, 5);
+	Sim John(10, 7, 2, 5); // construct a sim
 
 	John.W_IN_LANE.conditionallyAddVehicle("input.txt");
 	John.E_IN_LANE.conditionallyAddVehicle("input.txt");
@@ -27,7 +27,6 @@ int main(int argc, char const *argv[])
 
 		John.print();
 
-		// todo: do something about deleting vehicle at the end...
 		// attempt: if popping and it eave an empty space, that means the vehicle is off this board
 		Vehicle *tempw = John.W_IN_LANE.pop()->myVehicle;
 		Vehicle *tempe = John.E_IN_LANE.pop()->myVehicle;

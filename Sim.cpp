@@ -24,19 +24,20 @@
 Sim::Sim(int len, int rTime, int yTime, int gTime)
 {
 	this->len = len;
+
+	// make section instances for the intersection
 	intersection[0][0] = new Section;
 	intersection[0][1] = new Section;
 	intersection[1][0] = new Section;
 	intersection[1][1] = new Section;
 
-
-
-
+	// initialize lanes
 	for (int i = 0; i < 8; ++i)
 	{
 		lanes[i] = Lane(len);
 	}
 
+	// initialize lights properly
 	NS_light.setTime(rTime, yTime, gTime);
 	EW_light.setTime(rTime, yTime, gTime);
 

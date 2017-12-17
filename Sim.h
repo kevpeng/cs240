@@ -16,29 +16,23 @@ using namespace std;
 
 class Sim
 {
-public:
-	//Sim();
-	Sim(int len, int rTime, int yTime, int gTime);
-	~Sim();
+	public:
+		//Sim();
+		Sim(int len, int rTime, int yTime, int gTime);
+		~Sim();
 
-	void update();
-	void print();
+		void update();
+		void print();
 
-	int len;
+		int len;
 
-	Stoplight NS_light;
-	Stoplight EW_light;
+		Stoplight NS_light;
+		Stoplight EW_light;
 
-	Section* intersection[2][2];
-	Lane lanes[8];
-	//vector<Lane> lanes;	
-							/*  Even indexed lanes are OUTBOUND
-								--70--
-								 6XX1
-								 5XX2
-								--43--
-								 */   
-	vector<Vehicle> vehicles;
+		Section* intersection[2][2];
+		Lane lanes[8];
+
+		vector<Vehicle> vehicles;
 
 };
 

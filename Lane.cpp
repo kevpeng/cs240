@@ -2,7 +2,7 @@
 
 void Lane::conditionallyAddVehicle(string input)
 {
-	// construct a vehicle
+	// construct a vehicle temporarily
 	Vehicle *temp = new Vehicle(input);
 
 	// check if it can fit in the lane
