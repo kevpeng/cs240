@@ -17,13 +17,13 @@ using namespace std;
 class Sim
 {
 	public:
-		Sim(int len, string lightfile);
+		Sim(int len, string file);
 		Sim(int len, int rTime, int yTime, int gTime);
 		~Sim();
 
 		void update();
 		void print();
-
+		void turnRight(int laneNum);
 		int len;
 
 		Stoplight NS_light;

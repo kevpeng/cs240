@@ -44,8 +44,12 @@ class Lane
     	}
     	void conditionallyAddVehicle(string file);
     	bool isSpaceAvailable(Vehicle v);
+		inline void conditionallyDeleteVehicle() 
+		{	
+			Vehicle *temp = this->pop()->myVehicle;
+			if(this->back() == 0) delete temp; 
+		}
 
-    protected:
     	
 
 };

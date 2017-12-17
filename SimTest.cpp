@@ -7,13 +7,13 @@ uniform_real_distribution<double> Random::randdouble(0.0,1.0);
 int main(int argc, char const *argv[])
 {
 	int count = 0;
-	Sim John(10, "lights.txt"); // construct a sim
-
+//	Sim John(10, "lights.txt"); // construct a sim
+	Sim John(10, 10, 7, 3); 
 	John.W_IN_LANE.conditionallyAddVehicle("input.txt");
-	John.E_IN_LANE.conditionallyAddVehicle("input.txt");
-	John.N_IN_LANE.conditionallyAddVehicle("input.txt");
-	John.S_IN_LANE.conditionallyAddVehicle("input.txt");
-
+//	John.E_IN_LANE.conditionallyAddVehicle("input.txt");
+//	John.N_IN_LANE.conditionallyAddVehicle("input.txt");
+//	John.S_IN_LANE.conditionallyAddVehicle("input.txt");
+	
 	while(true)
 	{
 		//printThisLane(myLane);

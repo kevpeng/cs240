@@ -17,7 +17,7 @@ class Section
 				return ' ';
 			else
 			{
-				switch(myVehicle->type())
+				switch(myVehicle->vehicleType())
 				{
 					case Vehicle::car:
 						return 'C'; //'C';

@@ -15,7 +15,7 @@ public:
 	void setColor(Color c);
 	void print();
 	void update();
-
+	inline Color getColor() { return myColor; }
 private:
 	Color myColor;
 	int redCountDown;

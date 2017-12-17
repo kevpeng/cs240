@@ -15,12 +15,21 @@
 
 #endif
 
+#define N_OUT_INDEX 0
+#define W_IN_INDEX  1
+#define E_OUT_INDEX 2
+#define N_IN_INDEX  3
+#define S_OUT_INDEX 4
+#define E_IN_INDEX  5
+#define W_OUT_INDEX 6
+#define S_IN_INDEX  7
 //Sim::Sim()
 //{
 //}
 
 
 
+Sim::Sim(int len, string file) {}
 Sim::Sim(int len, int rTime, int yTime, int gTime)
 {
 	this->len = len;
@@ -36,7 +45,8 @@ Sim::Sim(int len, int rTime, int yTime, int gTime)
 	{
 		lanes[i] = Lane(len);
 	}
-
+	
+//	Stoplight temp = Stoplight(file);
 	// initialize lights properly
 	NS_light.setTime(rTime, yTime, gTime);
 	EW_light.setTime(rTime, yTime, gTime);
@@ -53,35 +63,107 @@ void Sim::update()
 {
 	NS_light.update();
 	EW_light.update();
-	
-	// attempt: if popping and it eave an empty space, that means the vehicle is off this board
 
-	if(John.W_IN_LANE[len+OVERHANG-1].isEmpty())
+	cout << "IS W_IN_LANE.back empty??" << W_IN_LANE.back()->isEmpty() << endl;	
+	// attempt: if popping and it eave an empty space, that means the vehicle is off this board
+	// these if statements check if a lane can collectively move up one space. 
+	if(W_IN_LANE.back()->isEmpty())
 	{
-        Vehicle *tempw = John.W_IN_LANE.pop()->myVehicle;
-        John.W_IN_LANE.push(new Section);
-	}
-	if(John.E_IN_LANE[len+OVERHANG-1].isEmpty())
+        Vehicle *tempw = W_IN_LANE.pop()->myVehicle;
+        W_IN_LANE.push(new Section);
+	} 
+	else 
 	{
-        Vehicle *tempe = John.E_IN_LANE.pop()->myVehicle;
-        John.E_IN_LANE.push(new Section);
-	}
-	if(John.N_IN_LANE[len+OVERHANG-1].isEmpty())
-	{
-        Vehicle *tempn = John.N_IN_LANE.pop()->myVehicle;
-        John.N_IN_LANE.push(new Section);
-	}
-	if(John.S_IN_LANE[len+OVERHANG-1].isEmpty())
-	{
-        Vehicle *temps = John.S_IN_LANE.pop()->myVehicle;
-        John.S_IN_LANE.push(new Section);
-	}
-        //myLane.conditionallyAddVehicle("input.txt");			
+		cout << EW_light.getColor() << endl;
+		if(EW_light.getColor() == Stoplight::Green) 
+		{
+			cout << W_IN_LANE.back()->myVehicle->movementType() << endl;
+			if(W_IN_LANE.back()->myVehicle->movementType() == Vehicle::right)
+			{
+				this->turnRight(W_IN_INDEX);
+			}
+			else if(W_IN_LANE.back()->myVehicle->movementType() == Vehicle::straight)
+			{
+			//	John.W_IN_LANE.goStraight(W_IN_INDEX);
+			}
+			else if(W_IN_LANE.back()->myVehicle->movementType() == Vehicle::left)
+			{
+				if(E_IN_LANE.back()->isEmpty()){
+			//		John.W_IN_LANE.turnLeft(W_IN_INDEX);
+				}
+			}
+	
+			Section* temp = W_IN_LANE.pop();
+		//	intersection[][];
+		}
 		
+	}
+	
+	if(E_IN_LANE.back()->isEmpty())
+	{
+        Vehicle *tempe = E_IN_LANE.pop()->myVehicle;
+        E_IN_LANE.push(new Section);
+	} 
+	else
+	{
+	}
+	
+	if(N_IN_LANE.back()->isEmpty())
+	{
+        Vehicle *tempn = N_IN_LANE.pop()->myVehicle;
+        N_IN_LANE.push(new Section);
+	}
+	else
+	{
+	}
+
+	if(S_IN_LANE.back()->isEmpty())
+	{
+        Vehicle *temps = S_IN_LANE.pop()->myVehicle;
+        S_IN_LANE.push(new Section);
+	}
+	else
+	{
+	}
+    //myLane.conditionallyAddVehicle("input.txt");			
+		
+	
 	
 
 }
 
+// given a lane number, have the thing turn right	
+void Sim::turnRight(int laneNum)
+{
+	// final lane is the outbound of the right turn
+	int final = laneNum - 1;
+	lanes[final].conditionallyDeleteVehicle();
+	if(laneNum == 1)
+	{
+		lanes[final].push(intersection[0][1]);
+		intersection[0][1] = lanes[laneNum].pop();
+		cout << "IN TURNRIGHT METHOD" << endl;
+		lanes[laneNum].push(new Section);
+	}
+	else if(laneNum == 3)
+	{
+		lanes[final].push(intersection[1][1]);
+		intersection[1][1] = lanes[laneNum].pop();
+		lanes[laneNum].push(new Section);
+	}
+	else if(laneNum == 5)
+	{
+		lanes[final].push(intersection[1][0]);
+		intersection[1][0] = lanes[laneNum].pop();
+		lanes[laneNum].push(new Section);
+	}
+	else if(laneNum == 7)
+	{
+		lanes[final].push(intersection[0][0]);
+		intersection[0][0] = lanes[laneNum].pop();
+		lanes[laneNum].push(new Section);
+	}
+}
 
 /*
  * This function prints the "board"
