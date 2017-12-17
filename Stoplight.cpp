@@ -3,10 +3,12 @@
 #include <iostream>
 using namespace std;
 
-Stoplight::Stoplight()
+Stoplight::Stoplight() {}
+
+Stoplight::Stoplight(string file)
 {
 	// parses the file
-	LightParser temp = LightParser("lights.txt");
+	LightParser temp = LightParser(file);
 	myColor = Red;
 	redCountDown = temp.getRedTime(); 
 	yellowCountDown = temp.getYellowTime(); 

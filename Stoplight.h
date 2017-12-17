@@ -9,6 +9,7 @@ public:
 	enum Color {Red, Green, Yellow};
 
 	Stoplight();
+	Stoplight(string file);
 	~Stoplight();
 	void setTime(int r, int y, int g);
 	void setColor(Color c);
