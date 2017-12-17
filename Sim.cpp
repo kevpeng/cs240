@@ -28,10 +28,13 @@
 //}
 
 
-
-Sim::Sim(int len, string file) {}
-Sim::Sim(int len, int rTime, int yTime, int gTime)
+/*
+ *	This sim function starts the simulation and sets the values properly
+ *
+ */
+Sim::Sim(int len, string file) 
 {
+	// set length of the visible lane
 	this->len = len;
 
 	// make section instances for the intersection
@@ -46,19 +49,50 @@ Sim::Sim(int len, int rTime, int yTime, int gTime)
 		lanes[i] = Lane(len);
 	}
 	
-//	Stoplight temp = Stoplight(file);
+	LightParser temp = LightParser(file);
+
+	// initialize lights properly
+	NS_light.setTime(temp.getRedTime(), temp.getYellowTime(), temp.getGreenTime());
+	EW_light.setTime(temp.getRedTime(), temp.getYellowTime(), temp.getGreenTime());
+	
+	// hard code what the starting colors are			
+	EW_light.setColor(Stoplight::Red);
+	NS_light.setColor(Stoplight::Green);
+}
+
+Sim::Sim(int len, int rTime, int yTime, int gTime)
+{
+	// set visible length of lane
+	this->len = len;
+
+	// make section instances for the intersection
+	intersection[0][0] = new Section;
+	intersection[0][1] = new Section;
+	intersection[1][0] = new Section;
+	intersection[1][1] = new Section;
+
+	// initialize lanes
+	for (int i = 0; i < 8; ++i)
+	{
+		lanes[i] = Lane(len);
+	}
+	
 	// initialize lights properly
 	NS_light.setTime(rTime, yTime, gTime);
 	EW_light.setTime(rTime, yTime, gTime);
 
+	// hard code what the starting colors are 
 	NS_light.setColor(Stoplight::Red);
 	EW_light.setColor(Stoplight::Green);
 }
-Sim::~Sim()
-{
 
-}
+// default destructor
+Sim::~Sim() {}
 
+/*
+ *	This update method counts down the light timers and moves the proper lanes
+ *
+ */
 void Sim::update()
 {
 	NS_light.update();
@@ -81,6 +115,9 @@ void Sim::update()
 			if(W_IN_LANE.back()->myVehicle->movementType() == Vehicle::right)
 			{
 				this->turnRight(W_IN_INDEX);
+				this->turnRight(W_IN_INDEX);
+				this->turnRight(W_IN_INDEX);
+				
 			}
 			else if(W_IN_LANE.back()->myVehicle->movementType() == Vehicle::straight)
 			{

@@ -7,8 +7,8 @@ uniform_real_distribution<double> Random::randdouble(0.0,1.0);
 int main(int argc, char const *argv[])
 {
 	int count = 0;
-//	Sim John(10, "lights.txt"); // construct a sim
-	Sim John(10, 10, 7, 3); 
+	Sim John(10, "lights.txt"); // construct a sim
+//	Sim John(10, 10, 7, 3); 
 	John.W_IN_LANE.conditionallyAddVehicle("input.txt");
 //	John.E_IN_LANE.conditionallyAddVehicle("input.txt");
 //	John.N_IN_LANE.conditionallyAddVehicle("input.txt");
@@ -17,7 +17,7 @@ int main(int argc, char const *argv[])
 	while(true)
 	{
 		//printThisLane(myLane);
-		cout << endl << endl << count << endl;
+		cout << endl << endl << "clock tick: " << count << endl;
 
 		cout << "NS: " << endl;
 		John.NS_light.print();
