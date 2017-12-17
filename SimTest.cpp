@@ -7,7 +7,7 @@ uniform_real_distribution<double> Random::randdouble(0.0,1.0);
 int main(int argc, char const *argv[])
 {
 	int count = 0;
-	Sim John(10, 7, 2, 5); // construct a sim
+	Sim John(10, "lights.txt"); // construct a sim
 
 	John.W_IN_LANE.conditionallyAddVehicle("input.txt");
 	John.E_IN_LANE.conditionallyAddVehicle("input.txt");

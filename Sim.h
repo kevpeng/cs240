@@ -17,7 +17,7 @@ using namespace std;
 class Sim
 {
 	public:
-		//Sim();
+		Sim(int len, string lightfile);
 		Sim(int len, int rTime, int yTime, int gTime);
 		~Sim();
 
