@@ -49,6 +49,7 @@ class Lane
 			Vehicle *temp = this->pop()->myVehicle;
 			if(this->back() == 0) delete temp; 
 		}
+		inline int size() { return roadSections.size(); }
 
     	
 

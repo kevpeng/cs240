@@ -23,9 +23,13 @@
 #define E_IN_INDEX  5
 #define W_OUT_INDEX 6
 #define S_IN_INDEX  7
-//Sim::Sim()
-//{
-//}
+
+#define EndVehicleMovement(X) X.back()->myVehicle->movementType()
+#define EndEmpty(X) X.back()->isEmpty()
+#define IntVehicleMovement(X, Y) intersection[X][Y]->myVehicle->movementType()
+
+// maps a lane index to which intersection position it is touching
+#define adjInt(X) (X == 1 ? intersection[0][1] : (X == 3 ? intersection[1][1] : (X == 5 ? intersection[1][0] : intersection[0][0])))
 
 
 /*
@@ -97,12 +101,12 @@ void Sim::update()
 	NS_light.update();
 	EW_light.update();
 
-	cout << "Is n_out.back empty? " << N_OUT_LANE.back()->isEmpty() << endl;
+	//cout << "Is n_out.back empty? " << EndEmpty(N_OUT_LANE) << endl;
 	 	
-	cout << "IS W_IN_LANE.back empty?? 0 false, 1 true: " << W_IN_LANE.back()->isEmpty() << endl;	
-	// attempt: if popping and it eave an empty space, that means the vehicle is off this board
+	cout << "IS W_IN_LANE.back empty?? " << (EndEmpty(W_IN_LANE) ? ("Yes") : ("No")) << endl;	
+	// attempt: if popping and it leave an empty space, that means the vehicle is off this board
 	// these if statements check if a lane can collectively move up one space. 
-	if(W_IN_LANE.back()->isEmpty())
+	if(EndEmpty(W_IN_LANE))
 	{
 		cout << "***IN W_IN_LANE.back is empty***" << endl;
 //		cout << "IS W_IN_LANE.back empty?? 0 false, 1 true: " << W_IN_LANE.back()->isEmpty() << endl;	
@@ -115,37 +119,32 @@ void Sim::update()
 		if(EW_light.getColor() == Stoplight::Green) 
 		{	
 	
-			cout << W_IN_LANE.back()->myVehicle->movementType() << ": MOVEMENT TYPE!!!" << endl;
-			if(W_IN_LANE.back()->myVehicle->movementType() == Vehicle::right)
+			cout << EndVehicleMovement(W_IN_LANE) << ": MOVEMENT TYPE!!!" << endl;
+			if(EndVehicleMovement(W_IN_LANE) == Vehicle::right || IntVehicleMovement(0, 1) == Vehicle::right)
 			{
-				this->turnRight(W_IN_INDEX);
-				this->turnRight(W_IN_INDEX);
-				this->turnRight(W_IN_INDEX);
-				this->turnRight(W_IN_INDEX);
-				this->turnRight(W_IN_INDEX);
-				this->turnRight(W_IN_INDEX);
-				this->turnRight(W_IN_INDEX);
-				this->turnRight(W_IN_INDEX);
-				
+				cout << "going into the turnRight method" << endl;
+				this->turnRight(W_IN_INDEX);	
 			}
-			else if(W_IN_LANE.back()->myVehicle->movementType() == Vehicle::straight)
+			else if(EndVehicleMovement(W_IN_LANE) == Vehicle::straight)
 			{
 			//	John.W_IN_LANE.goStraight(W_IN_INDEX);
 			}
-			else if(W_IN_LANE.back()->myVehicle->movementType() == Vehicle::left)
+			else if(EndVehicleMovement(W_IN_LANE) == Vehicle::left)
 			{
-				if(E_IN_LANE.back()->isEmpty()){
+				if(EndEmpty(E_IN_LANE))
+				{
 			//		John.W_IN_LANE.turnLeft(W_IN_INDEX);
 				}
 			}
 	
-			Section* temp = W_IN_LANE.pop();
+			// STRAY POP whyyyyyy
+			//Section* temp = W_IN_LANE.pop();
 		//	intersection[][];
 		}
 		
 	}
 	
-	if(E_IN_LANE.back()->isEmpty())
+	if(EndEmpty(E_IN_LANE))
 	{
         Vehicle *tempe = E_IN_LANE.pop()->myVehicle;
         E_IN_LANE.push(new Section);
@@ -154,7 +153,7 @@ void Sim::update()
 	{
 	}
 	
-	if(N_IN_LANE.back()->isEmpty())
+	if(EndEmpty(N_IN_LANE))
 	{
         Vehicle *tempn = N_IN_LANE.pop()->myVehicle;
         N_IN_LANE.push(new Section);
@@ -163,7 +162,7 @@ void Sim::update()
 	{
 	}
 
-	if(S_IN_LANE.back()->isEmpty())
+	if(EndEmpty(S_IN_LANE))
 	{
         Vehicle *temps = S_IN_LANE.pop()->myVehicle;
         S_IN_LANE.push(new Section);
@@ -177,6 +176,7 @@ void Sim::update()
 	cout << "[0][1] = NE = " << intersection[0][1] << endl;	
 	cout << "[1][0] = SW = " << intersection[1][0] << endl;	
 	cout << "[1][1] = SE = " << intersection[1][1] << endl;	
+	cout << "W_IN_LANE is of size " << W_IN_LANE.size() << " [14]" << endl;
 	
 	
 
@@ -187,13 +187,30 @@ void Sim::turnRight(int laneNum)
 {
 	// final lane is the outbound of the right turn
 	int final = laneNum - 1;
+
+	// pop off last section from right lane to make room (now length - 1)
 	lanes[final].conditionallyDeleteVehicle();
+
+	// push the traffic from the intersection into the right lane (restoring length)
+	lanes[final].push(adjInt(laneNum));
+
+	// pop from inbound lane into the intersection (length - 1)
+	adjInt(laneNum) = lanes[laneNum].pop();
+
+	// add a new section to the end of the inbound lane (length)
+	lanes[laneNum].push(new Section);
+
+	/*
 	if(laneNum == 1)
 	{
+
 		lanes[final].push(intersection[0][1]);
+		//cout << "b4 pop" << W_IN_LANE.size() << " [14]" << endl;
 		intersection[0][1] = lanes[laneNum].pop();
-		cout << "IN TURNRIGHT METHOD" << endl;
+		//cout << "IN TURNRIGHT METHOD" << endl;
+		//cout << "b4 push" << W_IN_LANE.size() << " [14]" << endl;
 		lanes[laneNum].push(new Section);
+		//cout << "after push" << W_IN_LANE.size() << " [14]" << endl;
 	}
 	else if(laneNum == 3)
 	{
@@ -213,6 +230,7 @@ void Sim::turnRight(int laneNum)
 		intersection[0][0] = lanes[laneNum].pop();
 		lanes[laneNum].push(new Section);
 	}
+	*/
 }
 
 //void Sim::goStraight(int laneNum)
