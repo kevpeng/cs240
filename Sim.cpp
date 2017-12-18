@@ -30,7 +30,7 @@
 
 // maps a lane index to which intersection position it is touching
 #define adjInt(X) (X == 1 ? intersection[0][1] : (X == 3 ? intersection[1][1] : (X == 5 ? intersection[1][0] : intersection[0][0])))
-
+#define whatColorAreYou(X) (X.getColor() == Stoplight:: )
 
 /*
  *	This sim function starts the simulation and sets the values properly
@@ -115,7 +115,7 @@ void Sim::update()
 	} 
 	else 
 	{
-		cout << "EW COLOR: " << EW_light.getColor() << endl;
+		cout << "EW COLOR: " << (EW_light.getColor() == ) << endl;
 		if(EW_light.getColor() == Stoplight::Green) 
 		{	
 	
