@@ -15,7 +15,7 @@ class Vehicle
 {
 	public:	
 		// variables
-		enum movementTypes { straight, left, right };
+		enum movementTypes { right, straight, left };
 		enum vehicleTypes { car, SUV, truck };
 
 		// Default constructor
@@ -28,44 +28,65 @@ class Vehicle
 			myMovement = movement;
 		}
 		// File constructor
-		inline Vehicle(string file) { 
+		inline Vehicle(int index, string file) { 
 			ProbabilityParser temp = ProbabilityParser(file);
 			int maxVehicles = temp.getVehicleSum();
 			int maxTurns = temp.getMovementSum();
-			int myVehicleInt = Random::randInt(0, maxVehicles);			
-			if(myVehicleInt < temp.getCarChance()){
+			int myVehicleInt = Random::randInt(1, maxVehicles);			
+
+			if(myVehicleInt <= temp.getCarChance())
+			{
 				myVehicle = vehicleTypes(0);
 			}
-			else if(myVehicleInt < temp.getSUVChance() + temp.getCarChance()){
+			else if(myVehicleInt <= temp.getCarChance() + temp.getSUVChance())
+			{
+				myVehicle = vehicleTypes(1);
+			}
+			else
+			{
+				myVehicle = vehicleTypes(2);
+			}
+
+
+
+		/*	if(myVehicleInt > 0 && myVehicleInt < temp.getCarChance()){
+				myVehicle = vehicleTypes(0);
+			}
+			else if(temp.getCarChance() < myVehicleInt && myVehicleInt <= temp.getSUVChance() + temp.getCarChance()){
 				myVehicle = vehicleTypes(1);
 			}
 			else{
 				myVehicle = vehicleTypes(2);
-			}
+			}*/
 			myLength = myVehicle + 2;
 			
 			
-			int myTurnInt = Random::randInt(0, maxTurns);
-			if(myTurnInt < temp.getStraightChance()){
+			int myTurnInt = Random::randInt(1, maxTurns);
+			if(myTurnInt <= temp.getRightChance())
+			{
 				myMovement = movementTypes(0);
 			}
-			else if(myTurnInt < temp.getStraightChance() + temp.getLeftChance()){
+			else if(myTurnInt <= temp.getRightChance() + temp.getStraightChance())
+			{
 				myMovement = movementTypes(1);
 			}
-			else{
+			else
+			{
 				myMovement = movementTypes(2);
 			}
-		
-		/*
-			cout << "ERROR TESTING IN VEHICLE CONSTRUCTOR: " << endl << "movement = " << myMovement << endl;
-			cout << "straight chance: " << temp.getStraightChance() << endl << "left chance: " << temp.getLeftChance()+temp.getStraightChance() << endl
-				<< "right chance: " << temp.getRightChance() << endl;
-			cout << "myVehicleInt: " << myVehicleInt << endl;
-			cout << "vehicle = " << myVehicle << endl << "+++++++++++++++++++++++" << endl;
-		*/	
+/*			if(0 < myTurnInt && myTurnInt <= temp.getRightChance() || temp.getRightChance() != 0){
+				myMovement = movementTypes(0);
+			}
+			else if(temp.getRightChance() < myTurnInt && myTurnInt <= temp.getRightChance() + temp.getStraightChance()){
+				myMovement = movementTypes(1); 
+			}
+			else if(temp.getRightChance() + temp.getStraightChance() < myTurnInt && 
+				myTurnInt <= temp.getRightChance() + temp.getStraightChance() + temp.getLeftChance()){
+				myMovement = movementTypes(2);
+			}*/
+			startLaneIndex = index;
+		}		
 
-		}
-		
 		inline void print() {
 			cout << "myVehicle = " << myVehicle << endl;
 			cout << "myLength = " << myLength << endl;
@@ -74,13 +95,13 @@ class Vehicle
 		inline vehicleTypes vehicleType()   { return myVehicle; }	// accessor method for vehicleType
 		inline movementTypes movementType()   { return myMovement; }	// accessor method for vehicleType
 		inline int			length() { return myLength;  }	// accessor method for length
-
-
+		inline int getStartIndex() { return startLaneIndex; } // accessor method for index of starting lane
 	private:				
 		int myLength;  				// length of vehicle
 		vehicleTypes myVehicle; 	// type of vehicle
 		movementTypes myMovement;	// type of movement
-		vector<int> positionInRoad; // location of road on vehicle
-
+		int startLaneIndex;			// starting lane
 };
+
 #endif
+

@@ -15,6 +15,9 @@ public:
 	void setColor(Color c);
 	void print();
 	void update();
+	inline int getCount() { return count; }
+	inline int getYellowCountDown() { return yellowCountDown; }
+
 	inline Color getColor() { return myColor; }
 private:
 	Color myColor;

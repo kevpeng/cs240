@@ -23,7 +23,26 @@ class Sim
 
 		void update();
 		void print();
-		void turnRight(int laneNum);
+		inline void printStats()
+		{
+			int cars, suvs, trucks;
+			cars = suvs = trucks = 0;
+
+			for(int i = 1; i < 8; i += 2)
+			{
+				cars += lanes[i].count[0];
+				suvs += lanes[i].count[1];
+				trucks += lanes[i].count[2];
+			}
+
+			cout << "Cars: " << cars << endl;
+			cout << "SUVs: " << suvs << endl;
+			cout << "Trucks: " << trucks << endl;
+		}
+		void turnLeft(int laneNum, Vehicle* v);
+		void turnRight(int laneNum, Vehicle *v);
+		void goStraight(int laneNum, Vehicle *v);
+		void continueOn(int laneNum);
 		int len;
 
 		Stoplight NS_light;
@@ -31,9 +50,6 @@ class Sim
 
 		Section* intersection[2][2];
 		Lane lanes[8];
-
-		vector<Vehicle> vehicles;
-
 };
 
 #endif

@@ -12,15 +12,17 @@ class Lane
 		inline Lane(int n)
 		{
 			length = n;
-
+			hasMovedV = false;
 			for (int i = 0; i < n + OVERHANG; ++i)
 			{
 				roadSections.push_back(new Section);
 			}
+			count[0] = 0;
+			count[1] = 0;
+			count[2] = 0;
 		}
-		inline ~Lane() {}
+		inline ~Lane() { }
 
-		int length;
 		
 		inline Section*	back()
 		{
@@ -32,9 +34,9 @@ class Lane
 			roadSections.pop_back(); 
 			return temp;
 		}
-		inline void		push(Section* s) 
+		inline void	push(Section *s) 
 		{
-			roadSections.emplace(roadSections.cbegin(), s);
+			roadSections.insert(roadSections.begin(), s);
 		}
 
 		std::vector<Section*> roadSections;
@@ -42,7 +44,7 @@ class Lane
 		{
         	return roadSections[i];
     	}
-    	void conditionallyAddVehicle(string file);
+    	void conditionallyAddVehicle(int index, string file);
     	bool isSpaceAvailable(Vehicle v);
 		inline void conditionallyDeleteVehicle() 
 		{	
@@ -50,9 +52,14 @@ class Lane
 			if(this->back() == 0) delete temp; 
 		}
 		inline int size() { return roadSections.size(); }
-
-    	
-
+		inline void moved() { hasMovedV = true; }
+		inline void resetMove() { hasMovedV = false; }
+		inline bool hasMoved() { return hasMovedV; }
+		int count[3];
+	
+    private:
+		bool hasMovedV; 	
+		int length;
 };
 
 #endif

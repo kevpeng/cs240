@@ -6,60 +6,37 @@ uniform_real_distribution<double> Random::randdouble(0.0,1.0);
 
 int main(int argc, char const *argv[])
 {
-	int count = 0;
-	Sim John(10, "lights.txt"); // construct a sim
-//	Sim John(10, 10, 7, 3); 
-	John.W_IN_LANE.conditionallyAddVehicle("input.txt");
-//	John.E_IN_LANE.conditionallyAddVehicle("input.txt");
-//	John.N_IN_LANE.conditionallyAddVehicle("input.txt");
-//	John.S_IN_LANE.conditionallyAddVehicle("input.txt");
-	
-	while(true)
+	int max = 100;
+	if(argc > 1)
 	{
-		//printThisLane(myLane);
+		max = stoi(argv[1]);
+	}
+	int count = 0;
+	Sim Lilly(10, "lights.txt"); // construct a sim
+//	Sim Lilly(10, 10, 7, 3); 
+	
+	while(count != max)
+	{
 		cout << endl << endl << "clock tick: " << count << endl;
 
 		cout << "NS: " << endl;
-		John.NS_light.print();
+		Lilly.NS_light.print();
 
 		cout << "EW: " << endl;
-		John.EW_light.print();
+		Lilly.EW_light.print();
 
-		John.print();
-/*
-		// attempt: if popping and it eave an empty space, that means the vehicle is off this board
-		Vehicle *tempw = John.W_IN_LANE.pop()->myVehicle;
-		Vehicle *tempe = John.E_IN_LANE.pop()->myVehicle;
-		Vehicle *temps = John.S_IN_LANE.pop()->myVehicle;
-		Vehicle *tempn = John.N_IN_LANE.pop()->myVehicle;
+		Lilly.print();
 
-		// conditionally delete this vehicle if we have an empty space at the end
-		// pop space > delete veh popped if empty >> push empty spot to end
-		if(John.W_IN_LANE.back() == 0)
-			delete tempw;
-
-		if(John.E_IN_LANE.back() == 0)
-			delete tempe;
-
-		if(John.S_IN_LANE.back() == 0)
-			delete temps;
-
-		if(John.N_IN_LANE.back() == 0)
-			delete tempn;
-
-		John.W_IN_LANE.push(new Section);
-		John.E_IN_LANE.push(new Section);
-		John.S_IN_LANE.push(new Section);
-		John.N_IN_LANE.push(new Section);
-
-		//myLane.conditionallyAddVehicle("input.txt");
-*/
 		count++;
-		John.update();
+		Lilly.update();
 		cin.get();
-	}
 
-	//John.print();
+		Lilly.W_IN_LANE.conditionallyAddVehicle(1, "input.txt");
+		Lilly.E_IN_LANE.conditionallyAddVehicle(5, "input.txt");
+		Lilly.N_IN_LANE.conditionallyAddVehicle(3, "input.txt");
+		Lilly.S_IN_LANE.conditionallyAddVehicle(7, "input.txt");
+	}
+	Lilly.printStats();
 
 	return 0;
 }

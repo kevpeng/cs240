@@ -1,2 +1,2 @@
-green=8
+green=20
 yellow=3
