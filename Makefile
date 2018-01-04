@@ -13,8 +13,6 @@ main: $(OBJS)
 
 clean: 
 	rm main
-
-cleanall: clean
 	rm *.o
 
 # compile o files #

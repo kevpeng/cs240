@@ -29,9 +29,10 @@
 #define IntVehicleMovement(X, Y) intersection[X][Y]->myVehicle->movementType()
 
 // maps a lane index to which intersection position it is touching
-#define adjInt(X) (X == 1 ? intersection[0][1] : (X == 3 ? intersection[1][1] : (X == 5 ? intersection[1][0] : intersection[0][0])))
-#define whatColorAreYou(X) (X.getColor() == Stoplight:: )
-
+#define adjInt(X) (X % 2 != 0 ? adjIntersection(X) : adjIntersection(X + 1))
+#define adjIntersection(X) (X == 1 ? intersection[0][1] : (X == 3 ? intersection[1][1] : (X == 5 ? intersection[1][0] : intersection[0][0])))
+#define HEADING(X) (X->movementType() == Vehicle::left ? "Left" : (X->movementType() == Vehicle::right ? "Right" : "Left"))
+#define COLOR(X) (X.getColor() == Stoplight::Red ? "R" : (X.getColor() == Stoplight::Green ? "G" : "Y"))
 /*
  *	This sim function starts the simulation and sets the values properly
  *
@@ -90,7 +91,21 @@ Sim::Sim(int len, int rTime, int yTime, int gTime)
 }
 
 // default destructor
-Sim::~Sim() {}
+Sim::~Sim() 
+{ 
+	for (int i = 0; i < 2; ++i)
+		for (int j = 0; j < 2; ++j)
+			delete intersection[i][j];
+}
+
+
+// how many clock itcks it takes for a vehicle's movement to make it go from out of the intersection to past the intersection
+int getMovementLength(Vehicle *veh) 
+{
+	int sum = (int)(veh->length()) + (int)(veh->movementType()) + 2;
+
+	return sum;
+}
 
 /*
  *	This update method counts down the light timers and moves the proper lanes
@@ -99,149 +114,280 @@ Sim::~Sim() {}
 void Sim::update()
 {
 	NS_light.update();
-	EW_light.update();
+	EW_light.update();	
 
-	//cout << "Is n_out.back empty? " << EndEmpty(N_OUT_LANE) << endl;
-	 	
-	cout << "IS W_IN_LANE.back empty?? " << (EndEmpty(W_IN_LANE) ? ("Yes") : ("No")) << endl;	
-	// attempt: if popping and it leave an empty space, that means the vehicle is off this board
-	// these if statements check if a lane can collectively move up one space. 
-	if(EndEmpty(W_IN_LANE))
+	// first have any vehicles inside of the intersection continue their movements
+	for(int i = 0; i < 2; i++)
 	{
-		cout << "***IN W_IN_LANE.back is empty***" << endl;
-//		cout << "IS W_IN_LANE.back empty?? 0 false, 1 true: " << W_IN_LANE.back()->isEmpty() << endl;	
-        Vehicle *tempw = W_IN_LANE.pop()->myVehicle;
-    	W_IN_LANE.push(new Section);
-	} 
-	else 
-	{
-		cout << "EW COLOR: " << (EW_light.getColor() == ) << endl;
-		if(EW_light.getColor() == Stoplight::Green) 
-		{	
-	
-			cout << EndVehicleMovement(W_IN_LANE) << ": MOVEMENT TYPE!!!" << endl;
-			if(EndVehicleMovement(W_IN_LANE) == Vehicle::right || IntVehicleMovement(0, 1) == Vehicle::right)
+		for(int j = 0; j < 2; j++)
+		{
+			Vehicle *temp = intersection[i][j]->myVehicle;
+
+			if(temp != 0)
 			{
-				cout << "going into the turnRight method" << endl;
-				this->turnRight(W_IN_INDEX);	
-			}
-			else if(EndVehicleMovement(W_IN_LANE) == Vehicle::straight)
-			{
-			//	John.W_IN_LANE.goStraight(W_IN_INDEX);
-			}
-			else if(EndVehicleMovement(W_IN_LANE) == Vehicle::left)
-			{
-				if(EndEmpty(E_IN_LANE))
+//				cout << "Int[" << i << "][" << j << "] is " << intersection[i][j]->toString() << " and turning " << HEADING(temp) << endl;
+
+				switch(temp->movementType())
 				{
-			//		John.W_IN_LANE.turnLeft(W_IN_INDEX);
+					case Vehicle::right: 
+						turnRight(temp->getStartIndex(), temp);
+						break;
+					case Vehicle::straight:
+						goStraight(temp->getStartIndex(), temp);
+						break;
+					default:
+						turnLeft(temp->getStartIndex(), temp);
+						break;
 				}
 			}
-	
-			// STRAY POP whyyyyyy
-			//Section* temp = W_IN_LANE.pop();
-		//	intersection[][];
 		}
-		
-	}
-	
-	if(EndEmpty(E_IN_LANE))
+	}	
+
+	for(int i = 1; i < 8; i += 2)
 	{
-        Vehicle *tempe = E_IN_LANE.pop()->myVehicle;
-        E_IN_LANE.push(new Section);
-	} 
-	else
-	{
-	}
-	
-	if(EndEmpty(N_IN_LANE))
-	{
-        Vehicle *tempn = N_IN_LANE.pop()->myVehicle;
-        N_IN_LANE.push(new Section);
-	}
-	else
-	{
+		if(EndEmpty(lanes[i]))  // checks if spot in intersection is empty.
+		{
+			continueOn(i);
+		}	
+		else
+		{
+			if(i == 1 || i == 5)
+			{	
+				if(EW_light.getColor() != Stoplight::Red)	
+				{
+					if(EW_light.getCount() + ((EW_light.getColor() == Stoplight::Yellow) ? 0 : EW_light.getYellowCountDown()) 
+						> getMovementLength(lanes[i].back()->myVehicle))
+					{
+						// if light is green, go		
+						switch(lanes[i].back()->myVehicle->movementType())
+						{
+							case Vehicle::right: 
+								turnRight(i, lanes[i].back()->myVehicle);
+								break;
+							case Vehicle::straight:
+								goStraight(i, lanes[i].back()->myVehicle);
+								break;
+							default:
+								turnLeft(i, lanes[i].back()->myVehicle);
+								break;
+						}
+					}
+				}	
+				else 
+				{
+					// no op/hold because light is red. 
+				}	
+			}
+			else
+			{
+				if(NS_light.getColor() != Stoplight::Red)	
+				{
+					if(NS_light.getCount() + ((NS_light.getColor() == Stoplight::Yellow) ? 0 : NS_light.getYellowCountDown()) 
+						> getMovementLength(lanes[i].back()->myVehicle))
+					{
+						// if light is green, go		
+						switch(lanes[i].back()->myVehicle->movementType())
+						{
+							case Vehicle::right: 
+							turnRight(i, lanes[i].back()->myVehicle);
+						break;
+							case Vehicle::straight:
+							goStraight(i, lanes[i].back()->myVehicle);
+							break;
+						default:
+							turnLeft(i, lanes[i].back()->myVehicle);
+							break;
+						}
+					}
+				}	
+				else 
+				{
+					// no op/hold because light is red. 
+				}	
+			}
+		}	
 	}
 
-	if(EndEmpty(S_IN_LANE))
+	for(int i = 0; i < 8; i++)
 	{
-        Vehicle *temps = S_IN_LANE.pop()->myVehicle;
-        S_IN_LANE.push(new Section);
-	}
-	else
-	{
-	}
-    //myLane.conditionallyAddVehicle("input.txt");			
-	cout << "What's in the intersection?" << endl;
-	cout << "[0][0] = NW = " << intersection[0][0] << endl;	
-	cout << "[0][1] = NE = " << intersection[0][1] << endl;	
-	cout << "[1][0] = SW = " << intersection[1][0] << endl;	
-	cout << "[1][1] = SE = " << intersection[1][1] << endl;	
-	cout << "W_IN_LANE is of size " << W_IN_LANE.size() << " [14]" << endl;
-	
-	
+		if(i % 2 == 0)	// if any of the outbound lanes haven't otherwise been moved, move them.
+			continueOn(i);
 
+		lanes[i].resetMove();
+	}
 }
 
-// given a lane number, have the thing turn right	
-void Sim::turnRight(int laneNum)
+
+/*
+ * Give a lane number as an input, the cars in this lane will advance through the intersection
+ * in a continuous fashion, like a seive. This continuous block of cars will follow an L-shape
+ * turning right from the lane of the input number to the accompanying outbound lane for that move.
+ */	
+void Sim::turnRight(int inboundLane, Vehicle *v)
 {
 	// final lane is the outbound of the right turn
-	int final = laneNum - 1;
+	int final = inboundLane - 1;
 
-	// pop off last section from right lane to make room (now length - 1)
-	lanes[final].conditionallyDeleteVehicle();
-
-	// push the traffic from the intersection into the right lane (restoring length)
-	lanes[final].push(adjInt(laneNum));
-
-	// pop from inbound lane into the intersection (length - 1)
-	adjInt(laneNum) = lanes[laneNum].pop();
-
-	// add a new section to the end of the inbound lane (length)
-	lanes[laneNum].push(new Section);
-
-	/*
-	if(laneNum == 1)
+	if(!lanes[final].hasMoved() && !lanes[inboundLane].hasMoved())
 	{
+		// cout << "IN TURn RIGhT: " << inboundLane << endl;
+		// pop off last section from right lane to make room (now length - 1)
+		lanes[final].conditionallyDeleteVehicle();
 
-		lanes[final].push(intersection[0][1]);
-		//cout << "b4 pop" << W_IN_LANE.size() << " [14]" << endl;
-		intersection[0][1] = lanes[laneNum].pop();
-		//cout << "IN TURNRIGHT METHOD" << endl;
-		//cout << "b4 push" << W_IN_LANE.size() << " [14]" << endl;
-		lanes[laneNum].push(new Section);
-		//cout << "after push" << W_IN_LANE.size() << " [14]" << endl;
+		// push the traffic from the intersection into the right lane (restoring length)
+		lanes[final].push(adjInt(inboundLane));
+
+			// pop from inbound lane into the intersection (length - 1)
+			if(lanes[inboundLane].back()->myVehicle == v || lanes [inboundLane].back()->isEmpty())
+			{
+		//		delete adjInt(inboundLane);
+				adjInt(inboundLane) = lanes[inboundLane].pop();
+
+				// add a new section to the end of the inbound lane (length)
+				lanes[inboundLane].push(new Section);
+			}
+			else
+			{
+				adjInt(inboundLane) = new Section;
+			}
+
+		lanes[final].moved();
+		lanes[inboundLane].moved();
 	}
-	else if(laneNum == 3)
-	{
-		lanes[final].push(intersection[1][1]);
-		intersection[1][1] = lanes[laneNum].pop();
-		lanes[laneNum].push(new Section);
-	}
-	else if(laneNum == 5)
-	{
-		lanes[final].push(intersection[1][0]);
-		intersection[1][0] = lanes[laneNum].pop();
-		lanes[laneNum].push(new Section);
-	}
-	else if(laneNum == 7)
-	{
-		lanes[final].push(intersection[0][0]);
-		intersection[0][0] = lanes[laneNum].pop();
-		lanes[laneNum].push(new Section);
-	}
-	*/
 }
 
-//void Sim::goStraight(int laneNum)
-//{
-//}
+/*
+ * Give a lane number as an input, the cars in this lane will advance through the intersection
+ * in a continuous fashion, like a seive. This continuous block of cars will follow a straight
+ * line from the lane of the input number to the oundbound lane across the intersecton.
+ */	
+void Sim::goStraight(int inboundLane, Vehicle *v)
+{
+	
+	// final lane is the outbound of the right turn
+	int finalLane = (inboundLane - 3 + 8) % 8; // the outbound lane
+	int final2 = (inboundLane - 2 + 8) % 8; // used to find 2nd intersection spot
+	int oppCorner = (inboundLane + 3 + 8) % 8;
+	int adjCorner = (inboundLane + 1 + 8) % 8;
+
+	if(!lanes[finalLane].hasMoved() && !lanes[inboundLane].hasMoved())
+	{
+		// checks if the corners adjacent to the inbound and outbound lanes are either empty or left-turning
+		if((adjInt(oppCorner)->isEmpty() || (adjInt(oppCorner)->myVehicle->movementType() != Vehicle::left)) 
+			&& (adjInt(adjCorner)->isEmpty() || (adjInt(adjCorner)->myVehicle->movementType() != Vehicle::left))
+				&& (adjInt(inboundLane)->isEmpty() || (adjInt(inboundLane)->myVehicle->movementType() == Vehicle::straight)))
+		{
+			// cout << "IN StraiGHT: " << inboundLane << endl;
+
+			// pop off last section from right lane to make room (now length - 1)
+			lanes[finalLane].conditionallyDeleteVehicle();
+
+			// push the traffic from the intersection into the right lane (restoring length)
+			lanes[finalLane].push(adjInt(final2));
+
+			// move section through intersection
+			adjInt(final2) = adjInt(inboundLane);
+
+			// pop from inbound lane into the intersection (length - 1)
+			if(lanes[inboundLane].back()->myVehicle == v || lanes [inboundLane].back()->isEmpty())
+			{
+		//		delete adjInt(inboundLane);
+				adjInt(inboundLane) = lanes[inboundLane].pop();
+
+				// add a new section to the end of the inbound lane (length)
+				lanes[inboundLane].push(new Section);
+			}
+			else
+			{
+				adjInt(inboundLane) = new Section;
+			}
+
+			lanes[finalLane].moved();
+			lanes[inboundLane].moved();
+		}
+	}
+}
+
+/*
+ * Give a lane number as an input, the cars in this lane will advance through the intersection
+ * in a continuous fashion, like a seive. This continuous block of cars will follow an L-shape
+ * turning left from the lane of the input number to the accompanying outbound lane for that move.
+ */	
+void Sim::turnLeft(int inboundLane, Vehicle *v)
+{
+	
+	// final lane is the outbound of the right turn
+	int outboundLane = (inboundLane + 3 + 8) % 8; // the outbound lane
+	int final2 = (inboundLane - 2 + 8) % 8; // used to find 2nd intersection spot
+	int final3 = (final2 -2 + 8) % 8;
+	int adjCorner = (inboundLane + 1 + 8) % 8;
+
+	if(!lanes[outboundLane].hasMoved() && !lanes[inboundLane].hasMoved())
+	{
+		// checks if the corners adjacent to the inbound and outbound lanes are either empty or left-turning
+		if((adjInt(inboundLane)->isEmpty() || (adjInt(inboundLane)->myVehicle == v)) 
+			&& (adjInt(final3)->isEmpty() || (adjInt(final3)->myVehicle == v)))
+		{
+			// cout << "In left: " << inboundLane << endl;
+
+			// pop off last section from right lane to make room (now length - 1)
+			lanes[outboundLane].conditionallyDeleteVehicle();
+	
+			// push the traffic from the intersection into the right lane (restoring length)
+			lanes[outboundLane].push(adjInt(final3));
+	
+			// move section through intersection
+			adjInt(final3) = adjInt(final2);
+	
+			// move section through intersection
+			adjInt(final2) = adjInt(inboundLane);
+	
+			// pop from inbound lane into the intersection (length - 1)
+			if(lanes[inboundLane].back()->myVehicle == v || lanes[inboundLane].back()->isEmpty())
+			{
+		//		delete adjInt(inboundLane);
+				adjInt(inboundLane) = lanes[inboundLane].pop();
+
+				// add a new section to the end of the inbound lane (length)
+				lanes[inboundLane].push(new Section);
+			}
+			else
+			{
+				adjInt(inboundLane) = new Section;
+			}
+
+			lanes[outboundLane].moved();
+			lanes[inboundLane].moved();
+
+			// move any vehicle from adjacent corner if can do
+			if(!lanes[adjCorner].hasMoved())
+			{
+				lanes[adjCorner].push(adjInt(adjCorner));
+				lanes[adjCorner].conditionallyDeleteVehicle();
+
+				adjInt(adjCorner) = new Section;
+
+				lanes[adjCorner].moved();
+			}
+		}
+	}
+}
+
+/*
+ * A function to be called on lanes when they should continue and need no extra functionality, pop and push
+ */
+void Sim::continueOn(int outboundLane)
+{
+	if(!lanes[outboundLane].hasMoved())  // checks if the lane has moved.
+	{
+		lanes[outboundLane].conditionallyDeleteVehicle();
+   		lanes[outboundLane].push(new Section);					// fill empty spot with new empty section		
+		lanes[outboundLane].moved();
+	}	
+}
 
 /*
  * This function prints the "board"
- *
- *
- *
  */
 void Sim::print()
 {
@@ -276,103 +422,42 @@ void Sim::print()
 
 	for(int i = 0; i < len; i++) // len = 10
 	{
-	/*	if(i != len-1)
-		{
-	*/
-		for(int j = 0; j < len; j++) { cout << "-"; }
+		for(int j = 0; j < len; j++) { cout << ((i == len - 1 && j == i) ? COLOR(NS_light) : "-"); }
+
 		cout << '*' << S_IN_LANE[i+OVERHANG] << N_OUT_LANE[len-i-1] << '*';	
-		for(int j = 0; j < len; j++) { cout << "-"; }
+
+		for(int j = 0; j < len; j++) { cout << ((i == len - 1 && j == 0) ? COLOR(EW_light) : "-"); }
  		cout << endl;
-	/*	} else {
-			for(int j = 0; j < len; j++) { cout << "*"; }
-			cout << '*' << S_IN_LANE[i+OVERHANG] << N_OUT_LANE[len-i-1] << '*';	
-			for(int j = 0; j < len; j++) { cout << "*"; }
- 			cout << endl;
-		}
-	*/
 
 	}
 	
 	for(int i = 0; i < len * 2 + 4; i++) { cout << "*"; }
 	cout << endl;
-	for(int i = 0; i < len; i++){ cout << W_OUT_LANE[len+OVERHANG-i-1]; }
+
+	for(int i = 0; i < len; i++){ cout << W_OUT_LANE[len-i-1]; }
 	cout << '*' << intersection[0][0] << intersection[0][1] << '*';
+
 	for(int i = 0; i < len; i++){ cout << W_IN_LANE[len+OVERHANG-i-1]; }
 	cout << endl; 
+
 	for(int i = 0; i < len; i++){ cout << E_IN_LANE[i+OVERHANG]; }
 	cout << '*' << intersection[1][0] << intersection[1][1] << '*';
+
 	for(int i = 0; i < len; i++){ cout << E_OUT_LANE[i]; }
 	cout << endl;
+
 	for(int i = 0; i < len * 2 + 4; i++) { cout << "*"; }
 	cout << endl;
 
 	for(int i = 0; i < len; i++) // len = 10
 	{	
-	/*	if(i == 0)
-		{	
-	*/
-		for(int j = 0; j < len; j++) { cout << "-"; }
+		for(int j = 0; j < len; j++) { cout << ((i == 0 && j == len-1) ? COLOR(EW_light) : "-"); }
 		cout << '*' << S_OUT_LANE[i] << N_IN_LANE[len+OVERHANG-1-i] << '*';	
-		for(int j = 0; j < len; j++) { cout << "-"; }
+
+		for(int j = 0; j < len; j++) { cout << ((i == 0 && j == i) ? COLOR(NS_light) : "-"); }
  		cout << endl;
 		
-	/*
-			} else {
-			for(int j = 0; j < len; j++) { cout << "-"; }
-			cout << '*' << S_OUT_LANE[i] << N_IN_LANE[len+OVERHANG-1-i] << '*';	
-			for(int j = 0; j < len; j++) { cout << "-"; }
- 			cout << endl;	
-		}
-	*/
 	}
-
-/*
-		
-	// print each line, containing len blanks,
-	// a road section of an outbound and inbound
-	// lane, then len blanks
-	for(int i = 0; i < len; ++i)
-	{
-		// if on the last block before the intersection, print the NS light
-		// todo: make it actually print the light
-		for(int j = 0; j < len; ++j)
-			cout << (i == len - 1 && j == i) ? 'L' : ' ';
-
-		// now print the two sections of each lane
-		// since theyre ordered in opposite directions
-		// (one pointing up and another down) we will
-		// need to count back for one
-
-		// N_IN and N_OUT are macros for 7 and 0 respectively (in Lane.h)
-
-		cout << (N_IN_LANE[OVERHANG + i]) << (N_OUT_LANE[len - i - 1]);
-
-		//same, but for this one the adjacent inbound lane is EW, so EW light
-		for(int j = 0; j < len; ++j)
-			cout << (i == 0 && j == i) ? 'L' : ' ';
-	}
-	*/
-
-
-
-/*
-
-
-	// lets print the two east lanes
-
-	for (int i = OVERHANG; i < len; ++i)
-	{
-		//cout << "Here, my len is: " << len + OVERHANG - i - 1 << endl;
-		cout << E_IN_LANE[E_IN_LANE.length() - i - 1];
-		//cout << E_IN_LANE[i];
-	}
-	cout << endl;
-	for (int i = 0; i < len; ++i)
-	{
-		cout << E_OUT_LANE[i];
-	}
-	cout << endl;
-*/
 }
 
 

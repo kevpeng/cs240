@@ -1,7 +1,7 @@
-car=9
-SUV=5
-truck=5
+car=10
+SUV=10
+truck=10
 
-left=0
-right=12
-straight=0
+left=10
+right=10
+straight=10

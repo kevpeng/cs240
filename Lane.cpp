@@ -1,9 +1,9 @@
 #include "Lane.h"
 
-void Lane::conditionallyAddVehicle(string input)
+void Lane::conditionallyAddVehicle(int index, string input)
 {
 	// construct a vehicle temporarily
-	Vehicle *temp = new Vehicle(input);
+	Vehicle *temp = new Vehicle(index, input);
 
 	// check if it can fit in the lane
 	if(this->isSpaceAvailable(*temp))
@@ -12,6 +12,7 @@ void Lane::conditionallyAddVehicle(string input)
 		for (int i = 0; i < temp->length(); ++i)
 		{
 			(*this)[i]->assign(temp);	
+			count[(int)(*this)[i]->myVehicle->vehicleType()]++;
 		}
 	}
 	else

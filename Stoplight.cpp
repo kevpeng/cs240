@@ -27,7 +27,6 @@ void Stoplight::setTime(int r, int y, int g)
 	greenCountDown = g;
 }
 
-
 void Stoplight::setColor(Color c)
 {
 	myColor = c;
